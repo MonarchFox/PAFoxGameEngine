@@ -1,6 +1,8 @@
-#include "../Public/GraphicsRenderer.h"
 #include <stdexcept>
 #include <iostream>
+
+#include "../Public/GraphicsRenderer.h"
+
 
 
 namespace FoxEngine
@@ -166,4 +168,73 @@ namespace FoxEngine
 
         std::cout << "ViewPort Set!\n";
     }
+
+#pragma region Asset_Build_Functionality
+    void FxGraphicsRenderer::BuildAsset(FoxAssets::FxAssetsBase* asset)
+    {
+
+    }
+
+    HRESULT FxGraphicsRenderer::CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
+    {
+        HRESULT hr = S_OK;
+
+        DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
+
+        ID3DBlob* pErrorBlob = nullptr;
+        hr = D3DCompileFromFile(szFileName, nullptr, nullptr, szEntryPoint,
+            szShaderModel, dwShaderFlags, 0, ppBlobOut, &pErrorBlob);
+
+        if (FAILED(hr))
+        {
+            if (pErrorBlob)
+            {
+                OutputDebugStringA(reinterpret_cast<const char*>(pErrorBlob->GetBufferPointer()));
+                pErrorBlob->Release();
+            }
+            return hr;
+        }
+        if (pErrorBlob) pErrorBlob->Release();
+        return S_OK;
+    }
+
+    void FxGraphicsRenderer::BuildAssetVertexShader(FoxAssets::FxAssetsBase* asset)
+    {
+
+    }
+
+    void FxGraphicsRenderer::BuildAssetPixelShader(FoxAssets::FxAssetsBase* asset)
+    {
+
+    }
+
+    void FxGraphicsRenderer::BuildAssetInputLayout(FoxAssets::FxAssetsBase* asset)
+    {
+
+    }
+
+    void FxGraphicsRenderer::BuildAssetVertexBuffer(FoxAssets::FxAssetsBase* asset)
+    {
+
+    }
+
+    void FxGraphicsRenderer::BuildAssetIndexBuffer(FoxAssets::FxAssetsBase* asset)
+    {
+        D3D11_BUFFER_DESC desc{};
+        desc.ByteWidth = sizeof(asset->mIndices[0]) * asset->mIndices.size();
+
+        D3D11_SUBRESOURCE_DATA initIndicesData{};
+        initIndicesData.pSysMem = asset->mIndices.data();
+
+        const HRESULT hr = mDxDevice->CreateBuffer(&desc, &initIndicesData, &asset->mpIndicesBuffer);
+        if (FAILED(hr))
+            throw std::runtime_error("Failed To Create Index Buffer!");
+    }
+
+    void FxGraphicsRenderer::BuildAssetConstantBuffer(FoxAssets::FxAssetsBase* asset)
+    {
+
+    }
+
+#pragma endregion
 }

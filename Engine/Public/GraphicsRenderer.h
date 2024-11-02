@@ -2,8 +2,12 @@
 
 #include <d3d11.h>
 #include <dxgi.h>
+#include <d3dcompiler.h>
+
 #include <vector>
 #include <windows.h>
+
+#include "../../Assets/AssetsBase.h"
 
 
 #define SAFE_RELEASE(p, status) \
@@ -48,6 +52,8 @@ namespace FoxEngine
 
         //~ Rendering Functionality
         [[nodiscard]] bool Render() const;
+        void BuildAsset(FoxAssets::FxAssetsBase* asset);
+
         void SetBackGroundColor(const std::vector<float>& f4Color) { mBackgroundColor = f4Color; }
         [[nodiscard]] std::vector<float> GetBackgroundColor() const { return mBackgroundColor; }
 
@@ -58,5 +64,19 @@ namespace FoxEngine
         void CreateSwapChain();
         void CreateRenderTargetView();
         void CreateViewPort();
+
+        //~ Asset Build Functions
+        HRESULT CompileShaderFromFile(const WCHAR* szFileName,
+                                      LPCSTR szEntryPoint,
+                                      LPCSTR szShaderModel,
+                                      ID3DBlob** ppBlobOut);
+        
+        void BuildAssetVertexShader(FoxAssets::FxAssetsBase* asset);
+        void BuildAssetPixelShader(FoxAssets::FxAssetsBase* asset);
+        void BuildAssetInputLayout(FoxAssets::FxAssetsBase* asset);
+
+        void BuildAssetVertexBuffer(FoxAssets::FxAssetsBase* asset);
+        void BuildAssetIndexBuffer(FoxAssets::FxAssetsBase* asset);
+        void BuildAssetConstantBuffer(FoxAssets::FxAssetsBase* asset);
     };
 }

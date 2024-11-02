@@ -58,4 +58,3 @@ private:
     void BuildFX();
     void BuildVertexLayout();
 };
-
