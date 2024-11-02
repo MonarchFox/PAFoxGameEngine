@@ -93,7 +93,7 @@ namespace FoxEngine
 
         DXGI_SWAP_CHAIN_DESC desc;
         ZeroMemory(&desc, sizeof(desc));
-        desc.BufferCount = 2; // Use 2 for double-buffering
+        desc.BufferCount = 2;
         desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
         desc.SampleDesc.Count = 1;
         desc.SampleDesc.Quality = 0;
@@ -104,7 +104,7 @@ namespace FoxEngine
         desc.BufferDesc.RefreshRate.Denominator = 1;
         desc.Windowed = TRUE;
         desc.OutputWindow = mWindowHandle;
-        desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;  // Or DXGI_SWAP_EFFECT_FLIP_DISCARD
+        desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
         HRESULT hr = mDxgiFactory->CreateSwapChain(mDxDevice, &desc, &mSwapChain);
         if (FAILED(hr)) {
