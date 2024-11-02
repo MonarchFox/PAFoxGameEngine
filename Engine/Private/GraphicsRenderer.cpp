@@ -49,22 +49,23 @@ namespace FoxEngine
 
     bool FxGraphicsRenderer::Release() const
     {
-        SAFE_RELEASE(mBackBuffer);
-        SAFE_RELEASE(mDepthStencilBuffer);
-        SAFE_RELEASE(mDepthStencilView);
-        SAFE_RELEASE(mRenderTargetView);
-        SAFE_RELEASE(mSwapChain);
+        bool status = true;
+        SAFE_RELEASE(mBackBuffer, status);
+        SAFE_RELEASE(mDepthStencilBuffer, status);
+        SAFE_RELEASE(mDepthStencilView, status);
+        SAFE_RELEASE(mRenderTargetView, status);
+        SAFE_RELEASE(mSwapChain, status);
 
         //~ Devices
         mDxDeviceContext->ClearState();
 
-        SAFE_RELEASE(mDxgiAdapter);
-        SAFE_RELEASE(mDxgiDevice);
-        SAFE_RELEASE(mDxgiFactory);
-        SAFE_RELEASE(mDxDeviceContext);
-        SAFE_RELEASE(mDxDevice);
+        SAFE_RELEASE(mDxgiAdapter, status);
+        SAFE_RELEASE(mDxgiDevice, status);
+        SAFE_RELEASE(mDxgiFactory, status);
+        SAFE_RELEASE(mDxDeviceContext, status);
+        SAFE_RELEASE(mDxDevice, status);
 
-        return true;
+        return status;
     }
 
     void FxGraphicsRenderer::CreateDevice()
@@ -170,10 +171,6 @@ namespace FoxEngine
     }
 
 #pragma region Asset_Build_Functionality
-    void FxGraphicsRenderer::BuildAsset(FoxAssets::FxAssetsBase* asset)
-    {
-
-    }
 
     HRESULT FxGraphicsRenderer::CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
     {
@@ -198,43 +195,36 @@ namespace FoxEngine
         return S_OK;
     }
 
-    void FxGraphicsRenderer::BuildAssetVertexShader(FoxAssets::FxAssetsBase* asset)
+    void FxGraphicsRenderer::BuildAssetVertexShader(std::wstring& effectPath, ID3DBlob* vertexBlop)
     {
-
+        const HRESULT hr = CompileShaderFromFile(effectPath.c_str(), "VS", "vs_4_0", &vertexBlop);
+        if (FAILED(hr)) throw std::runtime_error("Failed To Create Vertex Shader!");
     }
 
-    void FxGraphicsRenderer::BuildAssetPixelShader(FoxAssets::FxAssetsBase* asset)
+    void FxGraphicsRenderer::BuildAssetPixelShader(std::wstring& effectPath, ID3DBlob* pixelBlop)
     {
-
+        const HRESULT hr = CompileShaderFromFile(effectPath.c_str(), "PS", "ps_4_0", &pixelBlop);
+        if (FAILED(hr)) throw std::runtime_error("Failed To Create Pixel Shader!");
     }
 
-    void FxGraphicsRenderer::BuildAssetInputLayout(FoxAssets::FxAssetsBase* asset)
+    void FxGraphicsRenderer::BuildAssetInputLayout( ID3DBlob* vertexBlop,
+                                                    std::vector<D3D11_INPUT_ELEMENT_DESC>& inputLayoutDesc,
+                                                    ID3D11InputLayout* inputLayout)
     {
+        const HRESULT hr = mDxDevice->CreateInputLayout(inputLayoutDesc.data(),
+            static_cast<UINT>(inputLayoutDesc.size()),
+            vertexBlop->GetBufferPointer(),
+            vertexBlop->GetBufferSize(),
+            &inputLayout);
 
+        if (FAILED(hr)) throw std::runtime_error("Failed To Create Input Layout!");
     }
 
-    void FxGraphicsRenderer::BuildAssetVertexBuffer(FoxAssets::FxAssetsBase* asset)
+    void FxGraphicsRenderer::BuildAssetsBuffer(D3D11_BUFFER_DESC desc, D3D11_SUBRESOURCE_DATA* data, ID3D11Buffer* buffer)
     {
-
-    }
-
-    void FxGraphicsRenderer::BuildAssetIndexBuffer(FoxAssets::FxAssetsBase* asset)
-    {
-        D3D11_BUFFER_DESC desc{};
-        desc.ByteWidth = sizeof(asset->mIndices[0]) * asset->mIndices.size();
-
-        D3D11_SUBRESOURCE_DATA initIndicesData{};
-        initIndicesData.pSysMem = asset->mIndices.data();
-
-        const HRESULT hr = mDxDevice->CreateBuffer(&desc, &initIndicesData, &asset->mpIndicesBuffer);
+        const HRESULT hr = mDxDevice->CreateBuffer(&desc, data, &buffer);
         if (FAILED(hr))
             throw std::runtime_error("Failed To Create Index Buffer!");
     }
-
-    void FxGraphicsRenderer::BuildAssetConstantBuffer(FoxAssets::FxAssetsBase* asset)
-    {
-
-    }
-
 #pragma endregion
 }

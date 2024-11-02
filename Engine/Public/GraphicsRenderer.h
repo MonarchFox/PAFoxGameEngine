@@ -6,14 +6,9 @@
 
 #include <vector>
 #include <windows.h>
+#include <string>
 
-#include "../../Assets/AssetsBase.h"
-
-
-#define SAFE_RELEASE(p, status) \
-    if (p != nullptr) {         \
-        p->Release();           \
-    }                           \
+#include "../../Utils/Helper.h"
 
 
 namespace FoxEngine
@@ -52,7 +47,6 @@ namespace FoxEngine
 
         //~ Rendering Functionality
         [[nodiscard]] bool Render() const;
-        void BuildAsset(FoxAssets::FxAssetsBase* asset);
 
         void SetBackGroundColor(const std::vector<float>& f4Color) { mBackgroundColor = f4Color; }
         [[nodiscard]] std::vector<float> GetBackgroundColor() const { return mBackgroundColor; }
@@ -65,18 +59,18 @@ namespace FoxEngine
         void CreateRenderTargetView();
         void CreateViewPort();
 
+    public:
         //~ Asset Build Functions
         HRESULT CompileShaderFromFile(const WCHAR* szFileName,
                                       LPCSTR szEntryPoint,
                                       LPCSTR szShaderModel,
                                       ID3DBlob** ppBlobOut);
         
-        void BuildAssetVertexShader(FoxAssets::FxAssetsBase* asset);
-        void BuildAssetPixelShader(FoxAssets::FxAssetsBase* asset);
-        void BuildAssetInputLayout(FoxAssets::FxAssetsBase* asset);
-
-        void BuildAssetVertexBuffer(FoxAssets::FxAssetsBase* asset);
-        void BuildAssetIndexBuffer(FoxAssets::FxAssetsBase* asset);
-        void BuildAssetConstantBuffer(FoxAssets::FxAssetsBase* asset);
+        void BuildAssetVertexShader(std::wstring& effectPath, ID3DBlob* vertexBlop);
+        void BuildAssetPixelShader(std::wstring& effectPath, ID3DBlob* pixelBlop);
+        void BuildAssetInputLayout(ID3DBlob* vertexBlop, std::vector<D3D11_INPUT_ELEMENT_DESC>& inputLayoutDesc,
+                                   ID3D11InputLayout* inputLayout);
+        
+        void BuildAssetsBuffer(D3D11_BUFFER_DESC desc, D3D11_SUBRESOURCE_DATA* data, ID3D11Buffer* buffer);
     };
 }

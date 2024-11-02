@@ -26,43 +26,47 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Window.cpp">
+    <ClCompile Include="Engine\Private\Window.cpp">
       <Filter>Engine\Private</Filter>
     </ClCompile>
-    <ClCompile Include="GraphicsRenderer.cpp">
+    <ClCompile Include="Engine\Private\GraphicsRenderer.cpp">
       <Filter>Engine\Private</Filter>
     </ClCompile>
-    <ClCompile Include="GameTimer.cpp">
+    <ClCompile Include="Engine\Private\GameTimer.cpp">
       <Filter>Engine\Private</Filter>
     </ClCompile>
-    <ClCompile Include="FoxEngine.cpp">
+    <ClCompile Include="Engine\Private\FoxEngine.cpp">
       <Filter>Engine\Private</Filter>
     </ClCompile>
-    <ClCompile Include="TestApp_1.cpp">
+    <ClCompile Include="ExampleApplication\TestApp_1\TestApp_1.cpp">
       <Filter>ExampleApplication\App_1</Filter>
     </ClCompile>
-    <ClCompile Include="TestApp_2.cpp">
+    <ClCompile Include="ExampleApplication\TestApp_2\TestApp_2.cpp">
       <Filter>ExampleApplication\App_2</Filter>
     </ClCompile>
+    <ClCompile Include="Assets\PrimitiveShape.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Window.h">
+    <ClInclude Include="Engine\Public\Window.h">
       <Filter>Engine\Public</Filter>
     </ClInclude>
-    <ClInclude Include="GraphicsRenderer.h">
+    <ClInclude Include="Engine\Public\GraphicsRenderer.h">
       <Filter>Engine\Public</Filter>
     </ClInclude>
-    <ClInclude Include="GameTimer.h">
+    <ClInclude Include="Engine\Public\GameTimer.h">
       <Filter>Engine\Public</Filter>
     </ClInclude>
-    <ClInclude Include="FoxEngine.h">
+    <ClInclude Include="Engine\Public\FoxEngine.h">
       <Filter>Engine\Public</Filter>
     </ClInclude>
-    <ClInclude Include="TestApp_1.h">
+    <ClInclude Include="ExampleApplication\TestApp_1\TestApp_1.h">
       <Filter>ExampleApplication\App_1</Filter>
     </ClInclude>
-    <ClInclude Include="TestApp_2.h">
+    <ClInclude Include="ExampleApplication\TestApp_2\TestApp_2.h">
       <Filter>ExampleApplication\App_2</Filter>
     </ClInclude>
+    <ClInclude Include="Assets\PrimitiveShape.h" />
+    <ClInclude Include="Utils\Helper.h" />
+    <ClInclude Include="Assets\AssetsBase.h" />
   </ItemGroup>
 </Project>

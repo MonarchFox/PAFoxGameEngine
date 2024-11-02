@@ -18,14 +18,15 @@ TestApp_2::TestApp_2()
 
 TestApp_2::~TestApp_2()
 {
-    SAFE_RELEASE(mpBoxConstantBuffer);
-    SAFE_RELEASE(mpBoxIndexBuffer);
-    SAFE_RELEASE(mpBoxPixelShader);
-    SAFE_RELEASE(mpBoxVertexBuffer);
-    SAFE_RELEASE(mpBoxVertexShader);
-    SAFE_RELEASE(mpInputLayout);
-    SAFE_RELEASE(mpVertexShaderBlob);
-    SAFE_RELEASE(mpPixelShaderBlob);
+    bool status = true;
+    SAFE_RELEASE(mpBoxConstantBuffer,status);
+    SAFE_RELEASE(mpBoxIndexBuffer,   status);
+    SAFE_RELEASE(mpBoxPixelShader,   status);
+    SAFE_RELEASE(mpBoxVertexBuffer,  status);
+    SAFE_RELEASE(mpBoxVertexShader,  status);
+    SAFE_RELEASE(mpInputLayout,      status);
+    SAFE_RELEASE(mpVertexShaderBlob, status);
+    SAFE_RELEASE(mpPixelShaderBlob,  status);
 }
 
 bool TestApp_2::Init()

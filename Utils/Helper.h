@@ -3,7 +3,10 @@
 
 #define SAFE_RELEASE(p, status) \
     if (p != nullptr) {         \
-        p->Release();           \
+        if (!p->Release())      \
+        {                       \
+            status = false;     \
+        }                       \
     }                           \
 
 #if defined(DEBUG) | defined(_DEBUG)
