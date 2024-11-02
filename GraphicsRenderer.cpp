@@ -10,7 +10,10 @@ namespace FoxEngine
 
     FxGraphicsRenderer::~FxGraphicsRenderer()
     {
-        if (!Release()) throw std::runtime_error("Failed To Release Memory!");
+        if (!Release())
+        {
+            std::cout << "Tho I didnt throw error there's some problem in Release call with Renderer!\n";
+        }
     }
 
     FxGraphicsRenderer* FxGraphicsRenderer::Get()

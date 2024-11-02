@@ -8,31 +8,32 @@ namespace FoxEngine
 {
     class FxWindow
     {
-        HWND mHandleWindow{};
+        HWND mHandleWindow      {};
         std::wstring mWindowName{ L"FoxGameEngine" };
         int mWindowWidth        { 1280 };
         int mWindowHeight       { 720 };
         bool bRunning           { false };
 
         // Configurations
-        int mMinWindowWidth{ 200 };
+        int mMinWindowWidth { 200 };
         int mMinWindowHeight{ 200 };
 
     public:
         FxWindow() = default;
         virtual ~FxWindow();
 
-        // Framework Methods
+        //~ Framework Methods
         virtual bool Init();
-        virtual void OnResizeBegin() {}
-        virtual void OnResizeEnd() {}
 
-        virtual void UpdateScene(float deltaTime)   = 0;
-        virtual void DrawScene()                    = 0;
+        virtual void OnResizeBegin() {}
+        virtual void OnResizeEnd()   {}
+
+        virtual void UpdateScene(float deltaTime) = 0;
+        virtual void DrawScene()                  = 0;
 
         // Input Handling
         virtual void OnMouseDown(WPARAM btnState, int x, int y) {}
-        virtual void OnMouseUp(WPARAM btnState, int x, int y) {}
+        virtual void OnMouseUp  (WPARAM btnState, int x, int y) {}
         virtual void OnMouseMove(WPARAM btnState, int x, int y) {}
 
         bool Release() const;
@@ -44,7 +45,7 @@ namespace FoxEngine
         virtual void EventOnPaused() {}
         virtual void EventOnResume() {}
         virtual void EventOnEnterSizeMove() {}
-        virtual void EventOnExitSizeMove() {}
+        virtual void EventOnExitSizeMove()  {}
         virtual void EventOnUpdate() {}
         virtual void EventOnDestroy();
 
@@ -56,7 +57,7 @@ namespace FoxEngine
 
         [[nodiscard]] RECT      GetWindowRect()   const;
         [[nodiscard]] HWND      GetWindowHandle() const;
-        [[nodiscard]] float     GetAspectRatio()     const;
+        [[nodiscard]] float     GetAspectRatio()  const;
 
         [[nodiscard]] int       GetMinWindowWidth()  const { return mMinWindowWidth; }
         [[nodiscard]] int       GetMinWindowHeight() const { return mMinWindowHeight; }
@@ -67,11 +68,10 @@ namespace FoxEngine
         // Setters
         void SetWindowName(const std::wstring text);
 
-        void SetWindowWidth(const int width) { mWindowWidth = width; }
-        void SetWindowHeight(const int height) { mWindowHeight = height; }
-        void SetRunning(const bool running) { bRunning = running; }
-        void SetMinWindowWidth(const int minWidth) { mMinWindowWidth = minWidth; }
-        void SetMinWindowHeight(const int minHeight) { mMinWindowHeight = minHeight; }
+        void SetWindowWidth    (const int  width)    { mWindowWidth     = width;     }
+        void SetWindowHeight   (const int  height)   { mWindowHeight    = height;    }
+        void SetRunning        (const bool running)  { bRunning         = running;   }
+        void SetMinWindowWidth (const int  minWidth) { mMinWindowWidth  = minWidth;  }
+        void SetMinWindowHeight(const int  minHeight){ mMinWindowHeight = minHeight; }
     };
 }
-
