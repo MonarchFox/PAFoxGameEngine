@@ -92,7 +92,7 @@ namespace FoxEngine
     bool FxWindow::InitWindow()
     {
         WNDCLASSEX wc{};
-        wc.style = CS_HREDRAW | CS_VREDRAW;  // Add redrawing styles
+        wc.style = CS_HREDRAW | CS_VREDRAW;
         wc.cbSize = sizeof(wc);
         wc.hbrBackground = reinterpret_cast<HBRUSH>(BLACK_BRUSH);
         wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
@@ -102,8 +102,8 @@ namespace FoxEngine
         wc.cbWndExtra = 0;
         wc.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
         wc.lpfnWndProc = WindowProc;
-        wc.lpszClassName = GetWindowName();  // Ensure this is std::wstring
-        wc.lpszMenuName = nullptr;  // Set to nullptr if no menu
+        wc.lpszClassName = GetWindowName();
+        wc.lpszMenuName = nullptr;
 
         if (!RegisterClassEx(&wc)) {
             DWORD error = GetLastError();
