@@ -10,9 +10,9 @@ namespace FoxEngine
     {
         HWND mHandleWindow{};
         std::wstring mWindowName{ L"FoxGameEngine" };
-        int mWindowWidth{ 1280 };
-        int mWindowHeight{ 720 };
-        bool bRunning{ false };
+        int mWindowWidth        { 1280 };
+        int mWindowHeight       { 720 };
+        bool bRunning           { false };
 
         // Configurations
         int mMinWindowWidth{ 200 };
