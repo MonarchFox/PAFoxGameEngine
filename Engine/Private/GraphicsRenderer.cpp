@@ -1,4 +1,4 @@
-#include "GraphicsRenderer.h"
+#include "../Public/GraphicsRenderer.h"
 #include <stdexcept>
 #include <iostream>
 
@@ -47,24 +47,22 @@ namespace FoxEngine
 
     bool FxGraphicsRenderer::Release() const
     {
-        bool status = true;
-
-        SAFE_RELEASE(mBackBuffer, status);
-        SAFE_RELEASE(mDepthStencilBuffer, status);
-        SAFE_RELEASE(mDepthStencilView, status);
-        SAFE_RELEASE(mRenderTargetView, status);
-        SAFE_RELEASE(mSwapChain, status);
+        SAFE_RELEASE(mBackBuffer);
+        SAFE_RELEASE(mDepthStencilBuffer);
+        SAFE_RELEASE(mDepthStencilView);
+        SAFE_RELEASE(mRenderTargetView);
+        SAFE_RELEASE(mSwapChain);
 
         //~ Devices
         mDxDeviceContext->ClearState();
 
-        SAFE_RELEASE(mDxgiAdapter, status);
-        SAFE_RELEASE(mDxgiDevice, status);
-        SAFE_RELEASE(mDxgiFactory, status);
-        SAFE_RELEASE(mDxDeviceContext, status);
-        SAFE_RELEASE(mDxDevice, status);
+        SAFE_RELEASE(mDxgiAdapter);
+        SAFE_RELEASE(mDxgiDevice);
+        SAFE_RELEASE(mDxgiFactory);
+        SAFE_RELEASE(mDxDeviceContext);
+        SAFE_RELEASE(mDxDevice);
 
-        return status;
+        return true;
     }
 
     void FxGraphicsRenderer::CreateDevice()

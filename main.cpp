@@ -1,9 +1,9 @@
-#include "TestApp_1.h"
+#include "TestApp_2.h"
 
 
 int main()
 {
-	TestApp_1 app{};
+	TestApp_2 app{};
 	if (!app.Init()) return EXIT_FAILURE;
 
 	app.Run();

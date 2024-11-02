@@ -2,7 +2,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "Window.h"
+#include "../Public/Window.h"
 
 
 namespace FoxEngine

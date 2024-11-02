@@ -17,6 +17,12 @@
     <Filter Include="ExampleApplication">
       <UniqueIdentifier>{3bd53fb1-e35f-40b6-8c92-38aa7e2cdaa8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ExampleApplication\App_1">
+      <UniqueIdentifier>{cd69f4d8-ddbd-4c40-9b04-b32525072a03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ExampleApplication\App_2">
+      <UniqueIdentifier>{64eaad76-85e2-4337-8a40-ecda3a45c6ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -29,11 +35,14 @@
     <ClCompile Include="GameTimer.cpp">
       <Filter>Engine\Private</Filter>
     </ClCompile>
-    <ClCompile Include="GameEngine.cpp">
+    <ClCompile Include="FoxEngine.cpp">
       <Filter>Engine\Private</Filter>
     </ClCompile>
     <ClCompile Include="TestApp_1.cpp">
-      <Filter>ExampleApplication</Filter>
+      <Filter>ExampleApplication\App_1</Filter>
+    </ClCompile>
+    <ClCompile Include="TestApp_2.cpp">
+      <Filter>ExampleApplication\App_2</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -46,11 +55,14 @@
     <ClInclude Include="GameTimer.h">
       <Filter>Engine\Public</Filter>
     </ClInclude>
-    <ClInclude Include="GameEngine.h">
+    <ClInclude Include="FoxEngine.h">
       <Filter>Engine\Public</Filter>
     </ClInclude>
     <ClInclude Include="TestApp_1.h">
-      <Filter>ExampleApplication</Filter>
+      <Filter>ExampleApplication\App_1</Filter>
+    </ClInclude>
+    <ClInclude Include="TestApp_2.h">
+      <Filter>ExampleApplication\App_2</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

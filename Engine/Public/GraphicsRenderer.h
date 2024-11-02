@@ -7,8 +7,8 @@
 
 
 #define SAFE_RELEASE(p, status) \
-    if (p && !p->Release()) {   \
-        status = false;         \
+    if (p != nullptr) {         \
+        p->Release();           \
     }                           \
 
 

@@ -1,4 +1,5 @@
-#include "GameTimer.h"
+#include "../Public/GameTimer.h"
+
 
 namespace FoxEngine
 {

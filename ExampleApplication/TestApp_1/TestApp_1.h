@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GameEngine.h"
+#include "../../Engine/Public/FoxEngine.h"
 
 
 class TestApp_1 final: public FoxEngine::FxEngine
@@ -20,4 +20,3 @@ public:
 private:
     static std::vector<float> GenerateRandomColor();
 };
-
