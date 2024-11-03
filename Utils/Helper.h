@@ -1,5 +1,20 @@
 #pragma once
 
+#ifndef CHECK_TRUE_THROW_H
+#define CHECK_TRUE_THROW_H
+
+#include <stdexcept>
+#include <string>
+
+#define CHECK_TRUE(condition, message) \
+    do { \
+        if (!(condition)) { \
+            throw std::runtime_error(message); \
+        } \
+    } while (0)
+
+#endif
+
 
 #define SAFE_RELEASE(p, status) \
     if (p != nullptr) {         \

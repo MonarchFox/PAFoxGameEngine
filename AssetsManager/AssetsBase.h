@@ -5,7 +5,7 @@
 
 namespace FoxAssets
 {
-	class FxAssetsBase
+	class FAAssetsBase
 	{
 	public:
 		virtual void BuildAssest(FoxEngine::FxGraphicsRenderer* renderer) = 0;

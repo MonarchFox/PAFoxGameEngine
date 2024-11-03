@@ -66,10 +66,9 @@ namespace FoxEngine
                                       LPCSTR szShaderModel,
                                       ID3DBlob** ppBlobOut);
         
-        void BuildAssetVertexShader(std::wstring& effectPath, ID3DBlob* vertexBlop);
-        void BuildAssetPixelShader(std::wstring& effectPath, ID3DBlob* pixelBlop);
-        void BuildAssetInputLayout(ID3DBlob* vertexBlop, std::vector<D3D11_INPUT_ELEMENT_DESC>& inputLayoutDesc,
-                                   ID3D11InputLayout* inputLayout);
+        void BuildAssetVertexShader(std::wstring& effectPath, ID3DBlob* vertexBlop, ID3D11VertexShader* vertexShader);
+        void BuildAssetPixelShader(std::wstring& effectPath, ID3DBlob* pixelBlop, ID3D11PixelShader* pixelShader);
+        void BuildAssetInputLayout(ID3DBlob* vertexBlop, std::vector<D3D11_INPUT_ELEMENT_DESC>& inputLayoutDesc, ID3D11InputLayout* inputLayout);
         
         void BuildAssetsBuffer(D3D11_BUFFER_DESC desc, D3D11_SUBRESOURCE_DATA* data, ID3D11Buffer* buffer);
     };

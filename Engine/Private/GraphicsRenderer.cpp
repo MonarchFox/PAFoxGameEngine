@@ -195,15 +195,24 @@ namespace FoxEngine
         return S_OK;
     }
 
-    void FxGraphicsRenderer::BuildAssetVertexShader(std::wstring& effectPath, ID3DBlob* vertexBlop)
+    void FxGraphicsRenderer::BuildAssetVertexShader(std::wstring& effectPath, ID3DBlob* vertexBlop, ID3D11VertexShader* vertexShader)
     {
-        const HRESULT hr = CompileShaderFromFile(effectPath.c_str(), "VS", "vs_4_0", &vertexBlop);
-        if (FAILED(hr)) throw std::runtime_error("Failed To Create Vertex Shader!");
+        HRESULT hr = CompileShaderFromFile(effectPath.c_str(), "VS", "vs_4_0", &vertexBlop);
+        if (FAILED(hr)) throw std::runtime_error("Failed To Create Vertex Blob!");
+
+        hr = mDxDevice->CreateVertexShader(vertexBlop->GetBufferPointer(), vertexBlop->GetBufferSize(), nullptr,
+            &vertexShader);
+        if (FAILED(hr)) throw std::runtime_error("Failed To Create Vertex Shader");
     }
 
-    void FxGraphicsRenderer::BuildAssetPixelShader(std::wstring& effectPath, ID3DBlob* pixelBlop)
+    void FxGraphicsRenderer::BuildAssetPixelShader(std::wstring& effectPath, ID3DBlob* pixelBlop, ID3D11PixelShader* pixelShader)
     {
         const HRESULT hr = CompileShaderFromFile(effectPath.c_str(), "PS", "ps_4_0", &pixelBlop);
+        if (FAILED(hr)) throw std::runtime_error("Failed To Create Pixel Blob!");
+
+        mDxDevice->CreatePixelShader(pixelBlop->GetBufferPointer(), pixelBlop->GetBufferSize(), nullptr,
+            &pixelShader);
+
         if (FAILED(hr)) throw std::runtime_error("Failed To Create Pixel Shader!");
     }
 
