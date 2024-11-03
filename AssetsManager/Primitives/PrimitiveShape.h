@@ -25,7 +25,7 @@ namespace FoxAssets
 		~FAPrimitiveShape();
 
 		//~ Used by Renderer To Build This Assest
-		virtual void BuildAssest(FoxEngine::FxGraphicsRenderer* renderer) override;
+		virtual void BuildAssets(FoxEngine::FxGraphicsRenderer* renderer) override;
 
 		/* @brief Defult Set To TriangleList */
 		void SetBuildTopology(D3D_PRIMITIVE_TOPOLOGY topology) { mPrimitiveTopology = topology; }
@@ -42,10 +42,11 @@ namespace FoxAssets
 		virtual D3D11_BUFFER_DESC		CreateVertexBufferDesc()   = 0;
 		virtual D3D11_BUFFER_DESC		CreateIndexBufferDesc()	   = 0;
 		virtual D3D11_BUFFER_DESC		CreateConstantBufferDesc() = 0;
+		virtual D3D11_RASTERIZER_DESC   CreateRasterizerDesc()	   = 0;
 
 		virtual std::vector<D3D11_INPUT_ELEMENT_DESC> CreateVertexLayout() = 0;
 
-	private:
+	protected:
 
 		ID3D11Buffer* mpVertexBuffer	{ nullptr };
 		ID3D11Buffer* mpIndexBuffer		{ nullptr };
@@ -54,9 +55,9 @@ namespace FoxAssets
 		ID3DBlob* mpVertexBlob			{ nullptr };
 		ID3DBlob* mpPixelBlob			{ nullptr };
 
-		ID3D11VertexShader* mpVertexShader{ nullptr };
-		ID3D11PixelShader*  mpPixelShader { nullptr };
-		ID3D11InputLayout*  mpInputLayout { nullptr };
+		ID3D11VertexShader*	   mpVertexShader	{ nullptr };
+		ID3D11PixelShader*	   mpPixelShader	{ nullptr };
+		ID3D11InputLayout*	   mpInputLayout	{ nullptr };
 
 		D3D_PRIMITIVE_TOPOLOGY mPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 

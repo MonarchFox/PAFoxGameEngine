@@ -7,6 +7,7 @@
 
 namespace FoxEngine
 {
+#pragma region Basic_Setup
     FxGraphicsRenderer::FxGraphicsRenderer()
         = default;
 
@@ -34,10 +35,61 @@ namespace FoxEngine
         return true;
     }
 
-    bool FxGraphicsRenderer::Render() const
+#pragma endregion
+
+#pragma region Render_Setup
+
+    bool FxGraphicsRenderer::PresetInputLayout(ID3D11InputLayout* layout)
+    {
+        mDxDeviceContext->IASetInputLayout(layout);
+        return true;
+    }
+
+    bool FxGraphicsRenderer::PresetVertexBuffer(ID3D11Buffer* ppVertexBuffer, UINT startSlot, UINT numberBuffers, UINT* pStride, UINT* pOffset)
+    {
+        mDxDeviceContext->IASetVertexBuffers(startSlot, numberBuffers, &ppVertexBuffer, pStride, pOffset);
+        return true;
+    }
+
+    bool FxGraphicsRenderer::PresetIndexBuffer(ID3D11Buffer* ppIndexBuffer, DXGI_FORMAT format, UINT offset)
+    {
+        mDxDeviceContext->IASetIndexBuffer(ppIndexBuffer, format, offset);
+        return true;
+    }
+
+    bool FxGraphicsRenderer::PresetTopology(D3D11_PRIMITIVE_TOPOLOGY topology)
+    {
+        mDxDeviceContext->IASetPrimitiveTopology(topology);
+        return true;
+    }
+
+    bool FxGraphicsRenderer::RenderVertextShader(ID3D11VertexShader* pVertexShader, ID3D11ClassInstance* const* ppClassInstances, UINT numClassInstances)
+    {
+        mDxDeviceContext->VSSetShader(pVertexShader, ppClassInstances, numClassInstances);
+        return true;
+    }
+
+    bool FxGraphicsRenderer::RenderPixelShader(ID3D11PixelShader* pPixelShader, ID3D11ClassInstance* const* ppClassInstances, UINT numClassInstances)
+    {
+        mDxDeviceContext->PSSetShader(pPixelShader, ppClassInstances, numClassInstances);
+        return true;
+    }
+
+    bool FxGraphicsRenderer::RenderVertexConstantBuffer(ID3D11Buffer* ppConstantBuffer, UINT startSlot, UINT numberBuffers)
+    {
+        mDxDeviceContext->VSSetConstantBuffers(startSlot, numberBuffers, &ppConstantBuffer);
+        return true;
+    }
+
+    bool FxGraphicsRenderer::Render(const std::vector<std::unique_ptr<FoxAssets::FAAssetsBase>>& pAsset) const
     {
         mDxDeviceContext->ClearRenderTargetView(mRenderTargetView, GetBackgroundColor().data());
         mDxDeviceContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+        for (auto& asset : pAsset)
+        {
+            asset->Render(Get());
+        }
 
         const HRESULT hr = mSwapChain->Present(1, 0);
         if (FAILED(hr))
@@ -47,26 +99,86 @@ namespace FoxEngine
         return true;
     }
 
-    bool FxGraphicsRenderer::Release() const
+#pragma endregion
+
+#pragma region Asset_Build_Setup
+
+    HRESULT FxGraphicsRenderer::CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
     {
-        bool status = true;
-        SAFE_RELEASE(mBackBuffer, status);
-        SAFE_RELEASE(mDepthStencilBuffer, status);
-        SAFE_RELEASE(mDepthStencilView, status);
-        SAFE_RELEASE(mRenderTargetView, status);
-        SAFE_RELEASE(mSwapChain, status);
+        HRESULT hr = S_OK;
 
-        //~ Devices
-        mDxDeviceContext->ClearState();
+        DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 
-        SAFE_RELEASE(mDxgiAdapter, status);
-        SAFE_RELEASE(mDxgiDevice, status);
-        SAFE_RELEASE(mDxgiFactory, status);
-        SAFE_RELEASE(mDxDeviceContext, status);
-        SAFE_RELEASE(mDxDevice, status);
+        ID3DBlob* pErrorBlob = nullptr;
+        hr = D3DCompileFromFile(szFileName, nullptr, nullptr, szEntryPoint,
+            szShaderModel, dwShaderFlags, 0, ppBlobOut, &pErrorBlob);
 
-        return status;
+        if (FAILED(hr))
+        {
+            if (pErrorBlob)
+            {
+                OutputDebugStringA(reinterpret_cast<const char*>(pErrorBlob->GetBufferPointer()));
+                pErrorBlob->Release();
+            }
+            return hr;
+        }
+        if (pErrorBlob) pErrorBlob->Release();
+        return S_OK;
     }
+
+    void FxGraphicsRenderer::BuildAssetVertexShader(std::wstring& effectPath, ID3DBlob* vertexBlop, ID3D11VertexShader* vertexShader)
+    {
+        HRESULT hr = CompileShaderFromFile(effectPath.c_str(), "VS", "vs_4_0", &vertexBlop);
+        if (FAILED(hr)) throw std::runtime_error("Failed To Create Vertex Blob!");
+
+        hr = mDxDevice->CreateVertexShader(vertexBlop->GetBufferPointer(), vertexBlop->GetBufferSize(), nullptr,
+            &vertexShader);
+        if (FAILED(hr)) throw std::runtime_error("Failed To Create Vertex Shader");
+    }
+
+    void FxGraphicsRenderer::BuildAssetPixelShader(std::wstring& effectPath, ID3DBlob* pixelBlop, ID3D11PixelShader* pixelShader)
+    {
+        const HRESULT hr = CompileShaderFromFile(effectPath.c_str(), "PS", "ps_4_0", &pixelBlop);
+        if (FAILED(hr)) throw std::runtime_error("Failed To Create Pixel Blob!");
+
+        mDxDevice->CreatePixelShader(pixelBlop->GetBufferPointer(), pixelBlop->GetBufferSize(), nullptr,
+            &pixelShader);
+
+        if (FAILED(hr)) throw std::runtime_error("Failed To Create Pixel Shader!");
+    }
+
+    void FxGraphicsRenderer::BuildAssetInputLayout( ID3DBlob* vertexBlop,
+                                                    std::vector<D3D11_INPUT_ELEMENT_DESC>& inputLayoutDesc,
+                                                    ID3D11InputLayout* inputLayout)
+    {
+        const HRESULT hr = mDxDevice->CreateInputLayout(inputLayoutDesc.data(),
+            static_cast<UINT>(inputLayoutDesc.size()),
+            vertexBlop->GetBufferPointer(),
+            vertexBlop->GetBufferSize(),
+            &inputLayout);
+
+        if (FAILED(hr)) throw std::runtime_error("Failed To Create Input Layout!");
+    }
+
+    void FxGraphicsRenderer::BuildAssetsBuffer(D3D11_BUFFER_DESC desc, D3D11_SUBRESOURCE_DATA* data, ID3D11Buffer* buffer)
+    {
+        const HRESULT hr = mDxDevice->CreateBuffer(&desc, data, &buffer);
+        if (FAILED(hr))
+            throw std::runtime_error("Failed To Create Index Buffer!");
+    }
+
+    void FxGraphicsRenderer::BuildRasterizerState(D3D11_RASTERIZER_DESC* rasterDesc)
+    {
+        HRESULT hr = mDxDevice->CreateRasterizerState(rasterDesc, &mpRasterizerState);
+
+        if (FAILED(hr))
+            throw std::runtime_error("Failed To Create Rasterizer State!");
+
+        mDxDeviceContext->RSSetState(mpRasterizerState);
+    }
+#pragma endregion
+
+#pragma region DirectX_Setup
 
     void FxGraphicsRenderer::CreateDevice()
     {
@@ -170,70 +282,26 @@ namespace FoxEngine
         std::cout << "ViewPort Set!\n";
     }
 
-#pragma region Asset_Build_Functionality
-
-    HRESULT FxGraphicsRenderer::CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
+    bool FxGraphicsRenderer::Release() const
     {
-        HRESULT hr = S_OK;
+        bool status = true;
+        SAFE_RELEASE(mBackBuffer, status);
+        SAFE_RELEASE(mDepthStencilBuffer, status);
+        SAFE_RELEASE(mDepthStencilView, status);
+        SAFE_RELEASE(mRenderTargetView, status);
+        SAFE_RELEASE(mSwapChain, status);
 
-        DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
+        //~ Devices
+        mDxDeviceContext->ClearState();
 
-        ID3DBlob* pErrorBlob = nullptr;
-        hr = D3DCompileFromFile(szFileName, nullptr, nullptr, szEntryPoint,
-            szShaderModel, dwShaderFlags, 0, ppBlobOut, &pErrorBlob);
+        SAFE_RELEASE(mDxgiAdapter, status);
+        SAFE_RELEASE(mDxgiDevice, status);
+        SAFE_RELEASE(mDxgiFactory, status);
+        SAFE_RELEASE(mDxDeviceContext, status);
+        SAFE_RELEASE(mDxDevice, status);
 
-        if (FAILED(hr))
-        {
-            if (pErrorBlob)
-            {
-                OutputDebugStringA(reinterpret_cast<const char*>(pErrorBlob->GetBufferPointer()));
-                pErrorBlob->Release();
-            }
-            return hr;
-        }
-        if (pErrorBlob) pErrorBlob->Release();
-        return S_OK;
+        return status;
     }
 
-    void FxGraphicsRenderer::BuildAssetVertexShader(std::wstring& effectPath, ID3DBlob* vertexBlop, ID3D11VertexShader* vertexShader)
-    {
-        HRESULT hr = CompileShaderFromFile(effectPath.c_str(), "VS", "vs_4_0", &vertexBlop);
-        if (FAILED(hr)) throw std::runtime_error("Failed To Create Vertex Blob!");
-
-        hr = mDxDevice->CreateVertexShader(vertexBlop->GetBufferPointer(), vertexBlop->GetBufferSize(), nullptr,
-            &vertexShader);
-        if (FAILED(hr)) throw std::runtime_error("Failed To Create Vertex Shader");
-    }
-
-    void FxGraphicsRenderer::BuildAssetPixelShader(std::wstring& effectPath, ID3DBlob* pixelBlop, ID3D11PixelShader* pixelShader)
-    {
-        const HRESULT hr = CompileShaderFromFile(effectPath.c_str(), "PS", "ps_4_0", &pixelBlop);
-        if (FAILED(hr)) throw std::runtime_error("Failed To Create Pixel Blob!");
-
-        mDxDevice->CreatePixelShader(pixelBlop->GetBufferPointer(), pixelBlop->GetBufferSize(), nullptr,
-            &pixelShader);
-
-        if (FAILED(hr)) throw std::runtime_error("Failed To Create Pixel Shader!");
-    }
-
-    void FxGraphicsRenderer::BuildAssetInputLayout( ID3DBlob* vertexBlop,
-                                                    std::vector<D3D11_INPUT_ELEMENT_DESC>& inputLayoutDesc,
-                                                    ID3D11InputLayout* inputLayout)
-    {
-        const HRESULT hr = mDxDevice->CreateInputLayout(inputLayoutDesc.data(),
-            static_cast<UINT>(inputLayoutDesc.size()),
-            vertexBlop->GetBufferPointer(),
-            vertexBlop->GetBufferSize(),
-            &inputLayout);
-
-        if (FAILED(hr)) throw std::runtime_error("Failed To Create Input Layout!");
-    }
-
-    void FxGraphicsRenderer::BuildAssetsBuffer(D3D11_BUFFER_DESC desc, D3D11_SUBRESOURCE_DATA* data, ID3D11Buffer* buffer)
-    {
-        const HRESULT hr = mDxDevice->CreateBuffer(&desc, data, &buffer);
-        if (FAILED(hr))
-            throw std::runtime_error("Failed To Create Index Buffer!");
-    }
 #pragma endregion
 }

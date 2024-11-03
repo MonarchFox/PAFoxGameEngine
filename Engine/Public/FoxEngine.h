@@ -3,25 +3,18 @@
 #include "Window.h"
 #include "GameTimer.h"
 #include "GraphicsRenderer.h"
+#include "AssetsManager.h"
+
+
+#include <memory>
+#include <vector>
 
 
 namespace FoxEngine
 {
+
     class FxEngine : public FxWindow
     {
-        //~ Components
-        FxGameTimer mGameTimer;
-        FxGraphicsRenderer* mpGraphicsRenderer{};
-
-        //~ Booleans
-        bool mbEnginePaused;
-        bool mbEngineMinimized;
-        bool mbEngineMaximized;
-        bool mbEngineResizing;
-
-        //~ Config
-        void* mpThread { nullptr };
-        void* mpProcess{ nullptr };
     public:
         FxEngine();
         ~FxEngine() override;
@@ -29,8 +22,7 @@ namespace FoxEngine
         int Run();
         bool Init() override;
         
-        [[nodiscard]] 
-        FxGraphicsRenderer* GetGraphicsRenderer() const;
+        void RenderScene();
 
         void EventOnCreate() override;
         void EventOnUpdate() override;
@@ -47,5 +39,25 @@ namespace FoxEngine
         bool InitRenderer();
 
         void CalculateFrameStats() const;
+
+    private:
+        //~ Builds Assets that are pending for building
+        void BuildAssets();
+
+    private:
+        //~ Components
+        FxAssetsManager mAssetsManager;
+        FxGameTimer mGameTimer;
+        FxGraphicsRenderer* mpGraphicsRenderer{};
+
+        //~ Booleans
+        bool mbEnginePaused;
+        bool mbEngineMinimized;
+        bool mbEngineMaximized;
+        bool mbEngineResizing;
+
+        //~ Config
+        void* mpThread{ nullptr };
+        void* mpProcess{ nullptr };
     };
 }

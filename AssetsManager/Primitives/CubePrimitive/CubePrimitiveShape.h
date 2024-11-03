@@ -20,6 +20,13 @@ namespace FoxAssets
 
     class FACubePrimitiveShape final: public FAPrimitiveShape
     {
+
+    public:
+        
+        void BuildAssets(FoxEngine::FxGraphicsRenderer* renderer) override;
+        void InitRenderAssets(FoxEngine::FxGraphicsRenderer* renderer) override;
+        void Render(FoxEngine::FxGraphicsRenderer* renderer) override;
+
     protected:
         
         // Inherited via FAPrimitiveShape
@@ -31,6 +38,7 @@ namespace FoxAssets
         D3D11_BUFFER_DESC CreateVertexBufferDesc()   override;
         D3D11_BUFFER_DESC CreateIndexBufferDesc()    override;
         D3D11_BUFFER_DESC CreateConstantBufferDesc() override;
+        D3D11_RASTERIZER_DESC CreateRasterizerDesc() override;
 
         std::vector<D3D11_INPUT_ELEMENT_DESC> CreateVertexLayout() override;
 

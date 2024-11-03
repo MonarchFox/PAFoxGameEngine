@@ -43,10 +43,11 @@ namespace FoxEngine
         return true;
     }
 
-    FxGraphicsRenderer* FxEngine::GetGraphicsRenderer() const
+    void FxEngine::RenderScene()
     {
-        if (mpGraphicsRenderer == nullptr) return nullptr;
-        return mpGraphicsRenderer;
+        BuildAssets();
+
+        mpGraphicsRenderer->Render(mAssetsManager.mWorldAssets);
     }
 
     void FxEngine::EventOnCreate()
@@ -151,6 +152,19 @@ namespace FoxEngine
             // Reset
             frameCounter = 0;
             timeElapsed += 1.f;
+        }
+    }
+    
+    void FxEngine::BuildAssets()
+    {
+        while (!mAssetsManager.IsUnBuildEmpty())
+        {
+            std::cout << "Building Asset..\n";
+            auto asset = mAssetsManager.GetAssetsToBuild();
+            asset->BuildAssets(mpGraphicsRenderer);
+            asset->InitRenderAssets(mpGraphicsRenderer);
+            mAssetsManager.AddFinishedAssets(asset);
+            std::cout << "Build Complete!\n";
         }
     }
 }

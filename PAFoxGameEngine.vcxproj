@@ -128,6 +128,18 @@
       <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxguid.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
+    <FxCompile>
+      <DisableOptimizations>false</DisableOptimizations>
+    </FxCompile>
+    <FxCompile>
+      <EnableDebuggingInformation>false</EnableDebuggingInformation>
+    </FxCompile>
+    <CustomBuildStep>
+      <Command>fxc /T vs_4_0 /E VS /Fo "$(OutDir)\Cube_VS.cso" Cube.fx
+fxc /T ps_4_0 /E PS /Fo "$(OutDir)\Cube_PS.cso" Cube.fx</Command>
+      <Outputs>$(OutDir)\Cube_VS.cso;$(OutDir)\Cube_PS.cso
+;%(Outputs)</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -147,8 +159,15 @@
       <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxguid.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
+    <CustomBuildStep>
+      <Command>fxc /T vs_4_0 /E VS /Fo "$(OutDir)\Cube_VS.cso" Cube.fx
+fxc /T ps_4_0 /E PS /Fo "$(OutDir)\Cube_PS.cso" Cube.fx</Command>
+      <Outputs>$(OutDir)\Cube_VS.cso;$(OutDir)\Cube_PS.cso
+;%(Outputs)</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AssetsManager\Primitives\CubePrimitive\CubePrimitiveShape.cpp" />
     <ClCompile Include="Engine\Private\FoxEngine.cpp" />
     <ClCompile Include="Engine\Private\GameTimer.cpp" />
     <ClCompile Include="Engine\Private\GraphicsRenderer.cpp" />
@@ -156,18 +175,48 @@
     <ClCompile Include="ExampleApplication\TestApp_1\TestApp_1.cpp" />
     <ClCompile Include="ExampleApplication\TestApp_2\TestApp_2.cpp" />
     <ClCompile Include="Engine\Private\Window.cpp" />
-    <ClCompile Include="Assets\PrimitiveShape.cpp" />
+    <ClCompile Include="AssetsManager\Primitives\PrimitiveShape.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Assets\AssetsBase.h" />
+    <ClInclude Include="AssetsManager\AssetsBase.h" />
+    <ClInclude Include="AssetsManager\Primitives\CubePrimitive\CubePrimitiveShape.h" />
     <ClInclude Include="Engine\Public\FoxEngine.h" />
     <ClInclude Include="Engine\Public\GameTimer.h" />
     <ClInclude Include="Engine\Public\GraphicsRenderer.h" />
     <ClInclude Include="ExampleApplication\TestApp_1\TestApp_1.h" />
     <ClInclude Include="ExampleApplication\TestApp_2\TestApp_2.h" />
     <ClInclude Include="Engine\Public\Window.h" />
-    <ClInclude Include="Assets\PrimitiveShape.h" />
+    <ClInclude Include="AssetsManager\Primitives\PrimitiveShape.h" />
     <ClInclude Include="Utils\Helper.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Effects\Primitives\Cube\Cube.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">main</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">main</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ShaderType>
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <FxCompile Include="Effects\Primitives\Cube\Cube_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PS</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="Effects\Primitives\Cube\Cube_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VS</EntryPointName>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

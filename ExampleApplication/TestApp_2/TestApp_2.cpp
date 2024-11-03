@@ -19,23 +19,11 @@ TestApp_2::TestApp_2()
 TestApp_2::~TestApp_2()
 {
     bool status = true;
-    SAFE_RELEASE(mpBoxConstantBuffer,status);
-    SAFE_RELEASE(mpBoxIndexBuffer,   status);
-    SAFE_RELEASE(mpBoxPixelShader,   status);
-    SAFE_RELEASE(mpBoxVertexBuffer,  status);
-    SAFE_RELEASE(mpBoxVertexShader,  status);
-    SAFE_RELEASE(mpInputLayout,      status);
-    SAFE_RELEASE(mpVertexShaderBlob, status);
-    SAFE_RELEASE(mpPixelShaderBlob,  status);
 }
 
 bool TestApp_2::Init()
 {
     if (!FxEngine::Init()) return false;
-
-    BuildGeometryBuffers();
-    BuildFX();
-    BuildVertexLayout();
 
     return true;
 }
@@ -84,19 +72,4 @@ void TestApp_2::OnMouseUp(WPARAM btnState, int x, int y)
 void TestApp_2::OnMouseMove(WPARAM btnState, int x, int y)
 {
     FxEngine::OnMouseMove(btnState, x, y);
-}
-
-void TestApp_2::BuildGeometryBuffers()
-{
-
-}
-
-void TestApp_2::BuildFX()
-{
-
-}
-
-void TestApp_2::BuildVertexLayout()
-{
-
 }

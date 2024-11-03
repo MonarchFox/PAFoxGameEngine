@@ -4,6 +4,29 @@ using namespace DirectX;
 
 namespace FoxAssets
 {
+
+	void FACubePrimitiveShape::BuildAssets(FoxEngine::FxGraphicsRenderer* renderer)
+	{
+		FAPrimitiveShape::BuildAssets(renderer);
+	}
+
+	void FACubePrimitiveShape::PresetAssets(FoxEngine::FxGraphicsRenderer* renderer)
+	{
+		renderer->PresetInputLayout(mpInputLayout);
+
+		UINT stride = sizeof(CubeVertexBuffer);
+		UINT offset = 0;
+		renderer->PresetVertexBuffer(mpVertexBuffer, 0, 1, &stride, &offset);
+
+		renderer->PresetIndexBuffer(mpIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+		renderer->PresetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	}
+
+	void FACubePrimitiveShape::Render(FoxEngine::FxGraphicsRenderer* renderer)
+	{
+
+	}
+
 	std::wstring FACubePrimitiveShape::CreateEffectPath()
 	{
 		// TODO: Create a dynamic way for this!
@@ -98,6 +121,21 @@ namespace FoxAssets
 		return bd;
 	}
 
+	D3D11_RASTERIZER_DESC FACubePrimitiveShape::CreateRasterizerDesc()
+	{
+		D3D11_RASTERIZER_DESC rd{};
+		rd.CullMode = D3D11_CULL_NONE;
+		rd.FillMode = D3D11_FILL_SOLID;
+		rd.ScissorEnable = false;
+		rd.DepthBias = 0.f;
+		rd.DepthBiasClamp = 0.0f;
+		rd.DepthClipEnable = true;
+		rd.MultisampleEnable = false;
+		rd.SlopeScaledDepthBias = 0.0f;
+
+		return rd;
+	}
+
 	std::vector<D3D11_INPUT_ELEMENT_DESC> FACubePrimitiveShape::CreateVertexLayout()
 	{
 		std::vector<D3D11_INPUT_ELEMENT_DESC> vEd
@@ -108,4 +146,5 @@ namespace FoxAssets
 
 		return vEd;
 	}
+	
 }

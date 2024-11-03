@@ -44,7 +44,8 @@
     <ClCompile Include="ExampleApplication\TestApp_2\TestApp_2.cpp">
       <Filter>ExampleApplication\App_2</Filter>
     </ClCompile>
-    <ClCompile Include="Assets\PrimitiveShape.cpp" />
+    <ClCompile Include="AssetsManager\Primitives\PrimitiveShape.cpp" />
+    <ClCompile Include="AssetsManager\Primitives\CubePrimitive\CubePrimitiveShape.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Public\Window.h">
@@ -65,8 +66,16 @@
     <ClInclude Include="ExampleApplication\TestApp_2\TestApp_2.h">
       <Filter>ExampleApplication\App_2</Filter>
     </ClInclude>
-    <ClInclude Include="Assets\PrimitiveShape.h" />
+    <ClInclude Include="AssetsManager\Primitives\PrimitiveShape.h" />
     <ClInclude Include="Utils\Helper.h" />
-    <ClInclude Include="Assets\AssetsBase.h" />
+    <ClInclude Include="AssetsManager\AssetsBase.h" />
+    <ClInclude Include="AssetsManager\Primitives\CubePrimitive\CubePrimitiveShape.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Effects\Primitives\Cube\Cube_VS.hlsl" />
+    <FxCompile Include="Effects\Primitives\Cube\Cube_PS.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Effects\Primitives\Cube\Cube.fx" />
   </ItemGroup>
 </Project>
